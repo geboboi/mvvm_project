@@ -26,6 +26,8 @@ class _CostPageState extends State<CostPage> {
 
   final List<String> courierList = ['JNE', 'POS', 'TIKI'];
 
+  bool get _isInputEnabled => !isLoading;
+
   @override
   void initState() {
     super.initState();
@@ -145,16 +147,21 @@ class _CostPageState extends State<CostPage> {
                         child: Text(courier.toLowerCase()),
                       );
                     }).toList(),
-                    onChanged: (String? value) {
-                      setState(() {
-                        selectedCourier = value;
-                      });
-                    },
+                    onChanged: _isInputEnabled
+                        ? (String? value) {
+                            setState(() {
+                              selectedCourier = value;
+                            });
+                          }
+                        : null,
                   ),
                   const SizedBox(height: 16),
+
+                  // Weight Input
                   TextField(
                     controller: weightController,
                     keyboardType: TextInputType.number,
+                    enabled: _isInputEnabled,
                     decoration: const InputDecoration(
                       labelText: 'Berat (gr)',
                       border: OutlineInputBorder(),
@@ -162,12 +169,14 @@ class _CostPageState extends State<CostPage> {
                   ),
                   const SizedBox(height: 24),
 
+                  // Origin Section
                   const Text(
                     'Origin',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
 
+                  // Origin Province Dropdown
                   if (viewModel.provinceList.status == Status.loading)
                     const Center(child: CircularProgressIndicator())
                   else if (viewModel.provinceList.status == Status.error)
@@ -186,15 +195,17 @@ class _CostPageState extends State<CostPage> {
                           child: Text(province.province ?? ''),
                         );
                       }).toList(),
-                      onChanged: (Province? province) async {
-                        setState(() {
-                          selectedOriginProvince = province;
-                          selectedOriginCity = null;
-                        });
-                        if (province != null) {
-                          await _loadCities(true, province);
-                        }
-                      },
+                      onChanged: _isInputEnabled
+                          ? (Province? province) async {
+                              setState(() {
+                                selectedOriginProvince = province;
+                                selectedOriginCity = null;
+                              });
+                              if (province != null) {
+                                await _loadCities(true, province);
+                              }
+                            }
+                          : null,
                     ),
                   const SizedBox(height: 8),
 
@@ -219,20 +230,24 @@ class _CostPageState extends State<CostPage> {
                             child: Text(city.cityName ?? ''),
                           );
                         }).toList(),
-                        onChanged: (City? city) {
-                          setState(() {
-                            selectedOriginCity = city;
-                          });
-                        },
+                        onChanged: _isInputEnabled
+                            ? (City? city) {
+                                setState(() {
+                                  selectedOriginCity = city;
+                                });
+                              }
+                            : null,
                       ),
                   const SizedBox(height: 24),
 
+                  // Destination Section
                   const Text(
                     'Destination',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
 
+                  // Destination Province Dropdown
                   if (viewModel.provinceList.status == Status.loading)
                     const Center(child: CircularProgressIndicator())
                   else if (viewModel.provinceList.status == Status.error)
@@ -251,18 +266,21 @@ class _CostPageState extends State<CostPage> {
                           child: Text(province.province ?? ''),
                         );
                       }).toList(),
-                      onChanged: (Province? province) async {
-                        setState(() {
-                          selectedDestProvince = province;
-                          selectedDestCity = null;
-                        });
-                        if (province != null) {
-                          await _loadCities(false, province);
-                        }
-                      },
+                      onChanged: _isInputEnabled
+                          ? (Province? province) async {
+                              setState(() {
+                                selectedDestProvince = province;
+                                selectedDestCity = null;
+                              });
+                              if (province != null) {
+                                await _loadCities(false, province);
+                              }
+                            }
+                          : null,
                     ),
                   const SizedBox(height: 8),
 
+                  // Destination City Dropdown
                   if (selectedDestProvince != null)
                     if (isLoadingDestCities)
                       const Center(
@@ -283,16 +301,19 @@ class _CostPageState extends State<CostPage> {
                             child: Text(city.cityName ?? ''),
                           );
                         }).toList(),
-                        onChanged: (City? city) {
-                          setState(() {
-                            selectedDestCity = city;
-                          });
-                        },
+                        onChanged: _isInputEnabled
+                            ? (City? city) {
+                                setState(() {
+                                  selectedDestCity = city;
+                                });
+                              }
+                            : null,
                       ),
                   const SizedBox(height: 24),
 
+                  // Calculate Button
                   ElevatedButton(
-                    onPressed: _calculateShippingCost,
+                    onPressed: _isInputEnabled ? _calculateShippingCost : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       padding: const EdgeInsets.symmetric(vertical: 16),
