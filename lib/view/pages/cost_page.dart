@@ -152,8 +152,6 @@ class _CostPageState extends State<CostPage> {
                     },
                   ),
                   const SizedBox(height: 16),
-
-                  // Weight Input
                   TextField(
                     controller: weightController,
                     keyboardType: TextInputType.number,
@@ -164,14 +162,12 @@ class _CostPageState extends State<CostPage> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Origin Section
                   const Text(
                     'Origin',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
 
-                  // Origin Province Dropdown
                   if (viewModel.provinceList.status == Status.loading)
                     const Center(child: CircularProgressIndicator())
                   else if (viewModel.provinceList.status == Status.error)
